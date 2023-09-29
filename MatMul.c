@@ -37,7 +37,7 @@ void* matMul(void* arg)
     }
     
     sem_wait(&mutex[row][col]);
-    matRES.datarow][col] = tmp;
+    matRES.data[row][col] = tmp;
     sem_post(&mutex[row][col]);
 
     pthread_exit(NULL);
