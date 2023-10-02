@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/time.h>
 
 #define ARRAY_SIZE 100
 #define NUM_THREADS 4
 
-int target = 42; // Number to be searched
+int target = 77; // Number to be searched
 int found = 0;   // Tmp to check if value was found
 int array[ARRAY_SIZE];
 sem_t found_sem;
@@ -40,19 +41,19 @@ int main() {
     pthread_t threads[NUM_THREADS];
     int thread_ids[NUM_THREADS];
 
+    struct timeval start_time, end_time;
+
     // Initialize the array with random values
     srand(time(NULL));
     for (int i = 0; i < ARRAY_SIZE; i++) {
         array[i] = rand() % 100;
     }
 
-    // print array
-    for (int i = 0; i < ARRAY_SIZE; i++) {
-        int a = array[i];
-        printf("%d - ", a);
-    }
     sem_init(&found_sem, 0, 1); // Initialize the found semaphore
     sem_init(&print_sem, 0, 0); // Initialize the print semaphore
+
+    // start time
+    gettimeofday(&start_time, NULL);
 
     // Create and launch threads
     for (int i = 0; i < NUM_THREADS; i++) {
@@ -65,12 +66,22 @@ int main() {
         sem_wait(&print_sem); // Wait for permission to print
     }
 
+    
+    // end time
+    gettimeofday(&end_time, NULL);
+
+
+    // time elapsed
+    double time_elapsed = (end_time.tv_sec - start_time.tv_sec) + ((end_time.tv_usec - start_time.tv_usec) / 1e6);
+
     // Check if the number was found
     if (found) {
         printf("Number %d was found.\n", target);
     } else {
         printf("Number %d was not found.\n", target);
     }
+
+    printf("Time elapsed: %.6f seconds;\n", time_elapsed);
 
     // Clean up semaphores
     sem_destroy(&found_sem);

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/time.h>
 
 #define MAT4_SIZE 4
 
@@ -58,6 +59,8 @@ int main()
     pthread_t threads[MAT4_SIZE][MAT4_SIZE];
     struct ThreadData threadData[MAT4_SIZE][MAT4_SIZE];
 
+    // time variables
+    struct timeval start_time, end_time;
 
     // Inicializando os semaforos
     for (int i = 0; i < MAT4_SIZE; i++) {
@@ -66,6 +69,9 @@ int main()
             sem_init(&mutex[i][j], 0, 1);
         }
     }
+
+    // start time
+    gettimeofday(&start_time, NULL);
 
     // Criar as threads
     for (int i = 0; i < MAT4_SIZE; i++) {
@@ -88,6 +94,9 @@ int main()
         }
     }
 
+    // end time
+    gettimeofday(&end_time, NULL);
+
     // Printar as matrizes
     printf("4x4 Matrix:\n");
     for (int i = 0; i < MAT4_SIZE; i++) {
@@ -103,6 +112,10 @@ int main()
             sem_destroy(&mutex[i][j]);
         }
     }
+
+    double time_elapsed = (end_time.tv_sec - start_time.tv_sec) + ((end_time.tv_usec - start_time.tv_usec) / 1e6);
+
+    printf("Time elapsed: %.6f seconds;\n", time_elapsed);
 
     return 0;
 }

@@ -1,10 +1,4 @@
-all: SomaThreads  SomaThreadsSemaforo  MatMul Search Pi_approx
-
-SomaThreads: SomaThreads.c
-	gcc -o ./out/SomaThreads SomaThreads.c
-
-SomaThreadsSemaforo: SomaThreadsSemaforo.c
-	gcc -o ./out/SomaThreadsSemaforo SomaThreadsSemaforo.c
+all: MatMul Search Pi_approx
 
 MatMul: MatMul.c
 	gcc -o ./out/MatMul MatMul.c
